@@ -20,7 +20,7 @@ export function SalesChart({ data }: SalesChartProps) {
       <div className="mb-6">
         <h3 className="text-lg font-semibold text-foreground">Sales Trend</h3>
         <p className="text-sm text-muted-foreground mt-1">Daily sales over the selected period</p>
-        <p className="text-3xl font-bold text-foreground mt-2">
+        <p className="text-xl md:text-3xl font-bold text-foreground mt-2">
           ${totalSales.toLocaleString()}
           <span className="text-sm font-normal text-muted-foreground ml-2">Total</span>
         </p>

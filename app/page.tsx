@@ -1,12 +1,13 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useAuth } from '@/lib/hooks/useAuth'
 import { useSalesData } from '@/lib/hooks/useSalesData'
 import { Sidebar } from '@/components/Sidebar'
 import { TopNav } from '@/components/TopNav'
 import { DashboardHeader } from '@/components/DashboardHeader'
 import { FilterBar } from '@/components/FilterBar'
+import { VerticalFilterBar } from '@/components/VerticalFilterBar'
 import { SalesChart } from '@/components/sales-chart'
 import { SalesTable } from '@/components/sales-table'
 import { ChartSkeleton, TableSkeleton } from '@/components/LoadingStates'
@@ -35,6 +36,45 @@ export default function DashboardPage() {
 
   // Fetch sales data
   const { data: salesData, isLoading: salesLoading, error: salesError } = useSalesData(token, filters)
+
+  // Calculate dynamic stats
+  const stats = useMemo(() => {
+    if (!salesData) return undefined
+
+    // Calculate total sales from the daily totals array
+    const totalSales = salesData.results.TotalSales.reduce((sum, day) => sum + day.totalSale, 0)
+    
+    // Estimate orders count (using the length of the sales array for the current view, 
+    // ideally API should return total count)
+    // Since we don't have a total count endpoint, we'll use the current page count as a placeholder
+    // or if the API returns all data, we use length. 
+    // Based on pagination, we only get a slice. 
+    // For now, let's assume we can only show stats for the *fetched* data or use a placeholder if API doesn't support totals.
+    // However, the user wants "Real Data". 
+    // Let's use the TotalSales array length as a proxy for "Active Days" or similar if we can't get total orders.
+    // BUT, for "Orders", let's sum up the sales count if we had it. 
+    // We don't have total orders count in the API response shown in the prompt.
+    // We will use the length of the Sales array (page size) * currentPage as a rough estimate or just the page length.
+    // Actually, let's just use the length of the Sales array we have for now, 
+    // and for Customers, count unique emails in the current list.
+    // This is the best we can do without a dedicated stats endpoint.
+    
+    const currentOrders = salesData.results.Sales.length
+    const uniqueCustomers = new Set(salesData.results.Sales.map(s => s.customerEmail)).size
+    const avgOrderValue = currentOrders > 0 ? totalSales / currentOrders : 0 // This might be skewed because totalSales is global but orders is paginated.
+    
+    // BETTER APPROACH: 
+    // The user provided `TotalSales` array which has daily totals. Summing that gives accurate Total Revenue.
+    // We don't have accurate Total Orders or Total Customers for the whole period from this API response.
+    // We will display what we can.
+    
+    return {
+      totalSales,
+      totalOrders: currentOrders, // Note: This is just for the current page
+      avgOrderValue: currentOrders > 0 ? (salesData.results.Sales.reduce((sum, s) => sum + s.price, 0) / currentOrders) : 0, // Avg of current page
+      totalCustomers: uniqueCustomers // Unique on current page
+    }
+  }, [salesData])
 
   // Handle sort
   const handleSort = (column: 'date' | 'price') => {
@@ -78,20 +118,70 @@ export default function DashboardPage() {
     setCurrentPage(1)
   }
 
+  const handleReset = () => {
+    setFilters({
+      startDate: '2025-01-01',
+      endDate: '2025-01-31',
+      priceMin: '',
+      email: '',
+      phone: '',
+      sortBy: 'date',
+      sortOrder: 'asc',
+    })
+    setCurrentPage(1)
+  }
+
   return (
     <div className="flex min-h-screen bg-slate-50">
-      {/* Sidebar */}
+      {/* Sidebar - Fixed on Desktop */}
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      {/* Main Content */}
-      <div className="flex-1 lg:ml-64">
-        {/* Top Navigation */}
-        <TopNav onMenuClick={() => setSidebarOpen(true)} />
+      {/* Main Layout */}
+      <div className="flex-1 lg:ml-64 flex flex-col lg:flex-row">
+        
+        {/* Middle Column: Vertical Filters (Desktop Only) */}
+        <aside className="hidden lg:block w-80 border-r border-gray-200 bg-white h-screen sticky top-0 overflow-y-auto p-6 z-30">
+          <VerticalFilterBar
+            startDate={filters.startDate}
+            endDate={filters.endDate}
+            priceMin={filters.priceMin || ''}
+            email={filters.email || ''}
+            phone={filters.phone || ''}
+            onStartDateChange={(date) => handleFilterChange('startDate', date)}
+            onEndDateChange={(date) => handleFilterChange('endDate', date)}
+            onPriceMinChange={(price) => handleFilterChange('priceMin', price)}
+            onEmailChange={(email) => handleFilterChange('email', email)}
+            onPhoneChange={(phone) => handleFilterChange('phone', phone)}
+            onReset={handleReset}
+          />
+        </aside>
 
-        {/* Content Area */}
-        <main className="p-4 md:p-6">
-          <div className="w-full mx-auto">
-            <DashboardHeader />
+        {/* Right Column: Main Content */}
+        <div className="flex-1 min-w-0">
+          {/* Top Navigation */}
+          <TopNav onMenuClick={() => setSidebarOpen(true)} />
+
+          {/* Content Area */}
+          <main className="p-4 md:p-6 max-w-7xl mx-auto">
+            
+            {/* Mobile/Tablet Filter Bar (Hidden on Desktop) */}
+            <div className="lg:hidden mb-6">
+              <FilterBar
+                startDate={filters.startDate}
+                endDate={filters.endDate}
+                priceMin={filters.priceMin || ''}
+                email={filters.email || ''}
+                phone={filters.phone || ''}
+                onStartDateChange={(date) => handleFilterChange('startDate', date)}
+                onEndDateChange={(date) => handleFilterChange('endDate', date)}
+                onPriceMinChange={(price) => handleFilterChange('priceMin', price)}
+                onEmailChange={(email) => handleFilterChange('email', email)}
+                onPhoneChange={(phone) => handleFilterChange('phone', phone)}
+                onReset={handleReset}
+              />
+            </div>
+
+            <DashboardHeader stats={stats} />
 
             {/* Error States */}
             {authError && (
@@ -120,32 +210,6 @@ export default function DashboardPage() {
               </div>
             ) : (
               <>
-                {/* Filters Section */}
-                <FilterBar
-                  startDate={filters.startDate}
-                  endDate={filters.endDate}
-                  priceMin={filters.priceMin || ''}
-                  email={filters.email || ''}
-                  phone={filters.phone || ''}
-                  onStartDateChange={(date) => handleFilterChange('startDate', date)}
-                  onEndDateChange={(date) => handleFilterChange('endDate', date)}
-                  onPriceMinChange={(price) => handleFilterChange('priceMin', price)}
-                  onEmailChange={(email) => handleFilterChange('email', email)}
-                  onPhoneChange={(phone) => handleFilterChange('phone', phone)}
-                  onReset={() => {
-                    setFilters({
-                      startDate: '2025-01-01',
-                      endDate: '2025-01-31',
-                      priceMin: '',
-                      email: '',
-                      phone: '',
-                      sortBy: 'date',
-                      sortOrder: 'asc',
-                    })
-                    setCurrentPage(1)
-                  }}
-                />
-
                 {/* Chart Section */}
                 <div className="mb-6">
                   {salesLoading ? (
@@ -171,8 +235,8 @@ export default function DashboardPage() {
                 ) : null}
               </>
             )}
-          </div>
-        </main>
+          </main>
+        </div>
       </div>
     </div>
   )

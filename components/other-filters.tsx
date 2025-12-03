@@ -11,6 +11,7 @@ interface OtherFiltersProps {
   onPriceMinChange: (price: string) => void
   onEmailChange: (email: string) => void
   onPhoneChange: (phone: string) => void
+  vertical?: boolean
 }
 
 export function OtherFilters({
@@ -20,9 +21,10 @@ export function OtherFilters({
   onPriceMinChange,
   onEmailChange,
   onPhoneChange,
+  vertical = false,
 }: OtherFiltersProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className={`grid ${vertical ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-3'} gap-4`}>
       <div className="space-y-1.5">
         <Label htmlFor="price-min" className="text-xs font-medium text-gray-500 uppercase tracking-wide">
           Min Price

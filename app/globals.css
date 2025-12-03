@@ -1,0 +1,113 @@
+@import 'tailwindcss';
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 224 71% 4%;
+    --card: 0 0% 100%;
+    --card-foreground: 224 71% 4%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71% 4%;
+    --primary: 220 90% 56%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 220 9% 46%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+    --accent: 220 14% 96%;
+    --accent-foreground: 220 9% 46%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 220 90% 56%;
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  body {
+    background-color: hsl(220 14% 96%);
+    color: hsl(224 71% 4%);
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* Clean professional styles */
+.sidebar {
+  border-right: 1px solid hsl(220 13% 95%);
+  background: white;
+}
+
+.main-content {
+  background: hsl(0 0% 100%);
+  min-height: 100vh;
+}
+
+/* Card styles */
+.stat-card {
+  background: white;
+  border: 1px solid hsl(220 13% 94%);
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.stat-card:hover {
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+/* Table styles */
+.table-row:hover {
+  background: hsl(220 14% 98%);
+}
+
+/* Smooth transitions */
+* {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Custom scrollbar - subtle */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(220 14% 96%);
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(220 9% 46% / 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(220 9% 46% / 0.5);
+}
+
+/* Focus styles */
+:focus-visible {
+  outline: 2px solid hsl(220 90% 56%);
+  outline-offset: 2px;
+}
+
+/* Mobile overlay */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 40;
+  transition: opacity 0.3s ease;
+}
+
+/* Sidebar mobile animation */
+.sidebar-mobile {
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+}
+
+.sidebar-mobile.open {
+  transform: translateX(0);
+}

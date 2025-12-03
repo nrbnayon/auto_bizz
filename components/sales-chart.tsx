@@ -16,7 +16,7 @@ export function SalesChart({ data }: SalesChartProps) {
   const totalSales = data.reduce((sum, item) => sum + item.totalSale, 0)
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6">
+    <div className="bg-white rounded-lg border border-gray-200 p-2 md:p-6">
       <div className="mb-6">
         <h3 className="text-lg font-semibold text-foreground">Sales Trend</h3>
         <p className="text-sm text-muted-foreground mt-1">Daily sales over the selected period</p>
@@ -26,9 +26,9 @@ export function SalesChart({ data }: SalesChartProps) {
         </p>
       </div>
 
-      <div className="h-[350px]">
+      <div className="h-[180px] md:h-[350px]">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={formattedData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+          <AreaChart data={formattedData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
             <defs>
               <linearGradient id="salesGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="hsl(220 90% 56%)" stopOpacity={0.3}/>

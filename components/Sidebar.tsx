@@ -21,17 +21,16 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   return (
     <>
       {/* Mobile Overlay */}
-      {isOpen && (
-        <div 
-          className="sidebar-overlay md:hidden"
-          onClick={onClose}
-        />
-      )}
+      <div 
+        className={`fixed inset-0 bg-black/50 z-40 transition-opacity duration-300 lg:hidden
+          ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        onClick={onClose}
+      />
 
       {/* Sidebar */}
       <aside 
-        className={`sidebar w-64 h-screen fixed left-0 top-0 flex flex-col z-50 md:z-auto
-          ${isOpen ? 'sidebar-mobile open' : 'sidebar-mobile'} md:translate-x-0`}
+        className={`fixed top-0 left-0 z-50 h-screen w-64 bg-white border-r border-gray-200 transition-transform duration-300 ease-in-out flex flex-col lg:translate-x-0
+          ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         {/* Logo */}
         <div className="p-6 border-b border-gray-200 flex items-center justify-between">
@@ -47,7 +46,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className="lg:hidden"
             onClick={onClose}
           >
             <X className="w-5 h-5" />
@@ -66,7 +65,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                   key={item.id}
                   onClick={() => {
                     setActiveItem(item.id)
-                    if (window.innerWidth < 768) {
+                    if (window.innerWidth < 1024) {
                       onClose()
                     }
                   }}

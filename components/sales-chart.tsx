@@ -16,7 +16,7 @@ export function SalesChart({ data }: SalesChartProps) {
   const totalSales = data.reduce((sum, item) => sum + item.totalSale, 0)
 
   return (
-    <div className="bg-white rounded-lg border border-border p-6">
+    <div className="bg-white rounded-lg border border-gray-200 p-6">
       <div className="mb-6">
         <h3 className="text-lg font-semibold text-foreground">Sales Trend</h3>
         <p className="text-sm text-muted-foreground mt-1">Daily sales over the selected period</p>

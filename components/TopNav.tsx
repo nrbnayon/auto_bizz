@@ -23,7 +23,6 @@ export function TopNav({ onMenuClick }: TopNavProps) {
     e.preventDefault()
     if (searchQuery.trim()) {
       console.log('Searching for:', searchQuery)
-      // Search functionality would go here
     }
   }
 
@@ -35,7 +34,7 @@ export function TopNav({ onMenuClick }: TopNavProps) {
         <Button
           variant="ghost"
           size="icon"
-          className="md:hidden"
+          className="lg:hidden"
           onClick={onMenuClick}
         >
           <Menu className="w-5 h-5" />
@@ -109,7 +108,7 @@ export function TopNav({ onMenuClick }: TopNavProps) {
             <User className="w-4 h-4 text-primary" />
           </div>
           <div className="text-sm hidden lg:block">
-            <p className="font-medium">Admin User</p>
+            <p className="font-medium">Admin</p>
             <p className="text-xs text-muted-foreground">admin@example.com</p>
           </div>
         </div>

@@ -6,8 +6,7 @@ import { useSalesData } from '@/lib/hooks/useSalesData'
 import { Sidebar } from '@/components/Sidebar'
 import { TopNav } from '@/components/TopNav'
 import { DashboardHeader } from '@/components/DashboardHeader'
-import { DateRangeFilter } from '@/components/date-range-filter'
-import { OtherFilters } from '@/components/other-filters'
+import { FilterBar } from '@/components/FilterBar'
 import { SalesChart } from '@/components/sales-chart'
 import { SalesTable } from '@/components/sales-table'
 import { ChartSkeleton, TableSkeleton } from '@/components/LoadingStates'
@@ -85,13 +84,13 @@ export default function DashboardPage() {
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       {/* Main Content */}
-      <div className="flex-1 md:ml-64">
+      <div className="flex-1 lg:ml-64">
         {/* Top Navigation */}
         <TopNav onMenuClick={() => setSidebarOpen(true)} />
 
         {/* Content Area */}
         <main className="p-4 md:p-6">
-          <div className="max-w-7xl mx-auto">
+          <div className="w-full mx-auto">
             <DashboardHeader />
 
             {/* Error States */}
@@ -122,25 +121,30 @@ export default function DashboardPage() {
             ) : (
               <>
                 {/* Filters Section */}
-                <div className="bg-white rounded-lg border border-gray-200 p-4 md:p-6 mb-6">
-                  <h3 className="text-lg font-semibold text-foreground mb-4">Filters</h3>
-                  <div className="space-y-4">
-                    <DateRangeFilter
-                      startDate={filters.startDate}
-                      endDate={filters.endDate}
-                      onStartDateChange={(date) => handleFilterChange('startDate', date)}
-                      onEndDateChange={(date) => handleFilterChange('endDate', date)}
-                    />
-                    <OtherFilters
-                      priceMin={filters.priceMin || ''}
-                      email={filters.email || ''}
-                      phone={filters.phone || ''}
-                      onPriceMinChange={(price) => handleFilterChange('priceMin', price)}
-                      onEmailChange={(email) => handleFilterChange('email', email)}
-                      onPhoneChange={(phone) => handleFilterChange('phone', phone)}
-                    />
-                  </div>
-                </div>
+                <FilterBar
+                  startDate={filters.startDate}
+                  endDate={filters.endDate}
+                  priceMin={filters.priceMin || ''}
+                  email={filters.email || ''}
+                  phone={filters.phone || ''}
+                  onStartDateChange={(date) => handleFilterChange('startDate', date)}
+                  onEndDateChange={(date) => handleFilterChange('endDate', date)}
+                  onPriceMinChange={(price) => handleFilterChange('priceMin', price)}
+                  onEmailChange={(email) => handleFilterChange('email', email)}
+                  onPhoneChange={(phone) => handleFilterChange('phone', phone)}
+                  onReset={() => {
+                    setFilters({
+                      startDate: '2025-01-01',
+                      endDate: '2025-01-31',
+                      priceMin: '',
+                      email: '',
+                      phone: '',
+                      sortBy: 'date',
+                      sortOrder: 'asc',
+                    })
+                    setCurrentPage(1)
+                  }}
+                />
 
                 {/* Chart Section */}
                 <div className="mb-6">

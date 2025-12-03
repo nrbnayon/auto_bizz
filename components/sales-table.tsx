@@ -38,8 +38,8 @@ export function SalesTable({
   }
 
   return (
-    <div className="bg-white rounded-lg border border-border">
-      <div className="p-6 border-b border-border">
+    <div className="bg-white rounded-lg border border-gray-300">
+      <div className="p-6 border-b border-gray-200">
         <h3 className="text-lg font-semibold text-foreground">Sales Records</h3>
         <p className="text-sm text-muted-foreground mt-1">
           {sales.length} items • Page {currentPage}
@@ -52,10 +52,10 @@ export function SalesTable({
           <table className="w-full">
             <thead className="bg-muted/50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider border-b border-gray-300">
                   Transaction ID
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider border-b border-gray-300">
                   <button
                     onClick={() => onSort('date')}
                     className="flex items-center gap-2 hover:text-foreground transition-colors"
@@ -63,7 +63,7 @@ export function SalesTable({
                     Date {getSortIcon('date')}
                   </button>
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider border-b border-gray-300">
                   <button
                     onClick={() => onSort('price')}
                     className="flex items-center gap-2 hover:text-foreground transition-colors"
@@ -71,15 +71,15 @@ export function SalesTable({
                     Price {getSortIcon('price')}
                   </button>
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider border-b border-gray-300">
                   Customer Email
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider border-b border-gray-300">
                   Phone
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border">
+            <tbody className="divide-y divide-gray-200">
               {sales.map((sale) => (
                 <tr key={sale._id} className="table-row">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-muted-foreground">

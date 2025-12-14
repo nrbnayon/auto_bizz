@@ -60,6 +60,7 @@ export async function fetchSalesData(
     }
 
     const data: SalesResponse = await response.json()
+    // console.log(data.length)
     return data
   } catch (error) {
     if (error instanceof APIError) throw error
